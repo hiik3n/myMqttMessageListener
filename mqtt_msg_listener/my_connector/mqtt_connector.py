@@ -1,4 +1,5 @@
 import logging
+import time
 import paho.mqtt.client as mqtt
 
 
@@ -11,6 +12,8 @@ class MqttConnector(object):
         self.subscribeList = []
         self.host = host
         self.port = port
+
+        self._is_connect = False
 
         self.client = mqtt.Client(client_id=client_id)
         self.client.on_connect = self._on_connect
@@ -28,10 +31,22 @@ class MqttConnector(object):
         self.subscribeList.append(topic_qos_tuple)
 
     def connect(self):
-        self.logger.debug("connect")
-        self.client.connect(self.host, self.port)
-        self._add_subscription()
-        self.client.loop_start()
+        try:
+            self.logger.debug("connect")
+            self.client.connect(self.host, self.port)
+            self._add_subscription()
+            self.client.loop_start()
+            # time.sleep(15)
+            _count = 10
+            while (not self._is_connect) and (_count > 0):
+                self.logger.info("Trying connect to Mqtt Broker")
+                time.sleep(5)
+                _count -= 1
+
+            return _count > 0
+        except Exception as e:
+            self.logger.error("Can not connect to Broker (%s)" % repr(e))
+            return False
 
     def disconnect(self):
         self.logger.debug("disconnect")
@@ -54,6 +69,7 @@ class MqttConnector(object):
     # The callback for when the client receives a CONNACK response from the server.
     def _on_connect(self, client, userdata, flags, rc):
         self.logger.debug("Connected with result code " + str(rc))
+        self._is_connect = True
 
     # The callback for when a PUBLISH message is received from the server.
     def _on_message(self, client, userdata, msg):
@@ -61,25 +77,21 @@ class MqttConnector(object):
 
     def _on_disconnect(self, client, userdata, rc):
         self.logger.debug("Disconnect with result code " + str(rc))
+        self._is_connect = False
+
+    def is_connect(self):
+        return self._is_connect
 
 
 if __name__ == "__main__":
 
     import time
+    from config import *
+
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s - %(module)s - %(threadName)s - %(levelname)s - %(message)s')
     logging.Formatter.converter = time.gmtime
 
-    # MQTT Broker Config
-    MQTT_HOST = "ip"
-    MQTT_PORT = 8883
-    MQTT_USERNAME = "user"
-    MQTT_PASSWORD = "pwd"
-    MQTT_CACERT = "path"
-    MQTT_TLSVERSION = 5  # PROTOCOL_TLSv1_2 = 5
-    MQTT_CLIENTID = "name"
-    MQTT_CERT = None
-    MQTT_KEY = None
 
     def on_message_callback(client, userdata, msg):
         assert isinstance(msg, mqtt.MQTTMessage)
@@ -94,11 +106,11 @@ if __name__ == "__main__":
                              on_message_callback=on_message_callback)
 
     mqttConn.connect()
-    time.sleep(5)
-    mqttConn.reconnect()
-    time.sleep(5)
-    mqttConn.disconnect()
-    time.sleep(5)
-    mqttConn.connect()
-    while 1:
-        time.sleep(15)
+    time.sleep(15)
+    # mqttConn.reconnect()
+    # time.sleep(5)
+    # mqttConn.disconnect()
+    # time.sleep(5)
+    # mqttConn.connect()
+    # while 1:
+    #     time.sleep(15)
