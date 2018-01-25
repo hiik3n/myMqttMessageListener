@@ -6,7 +6,7 @@ Filter and process received messages from MQTT Broker by *MqttMessageHandler* (M
 
 Insert data to Database (InfluxDB) by using *DAO* (Data Access Object) (Insert MQTT Message objects to Database)
 
-![MqttMsgListener.png](/data/MqttMsgListener.png)
+![MqttMsgListener](data/MqttMsgListener.png)
 
 ### Notes:
 
