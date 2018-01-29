@@ -80,7 +80,8 @@ class SensorDataDAO(DAOInterface):
                 'knot_ts': data.knotTs,
                 'knot_rssi': data.knotRssi,
                 'sen_ts': data.senTs,
-                'sen_val': data.senVal
+                'sen_val': data.senVal,
+                'cloud_ts': data.ts
             }
         }
 

@@ -9,6 +9,7 @@ from mqtt_msg_listener.my_message_handler import MqttMessageHandler
 from mqtt_msg_listener.my_queue import MyQueue
 from mqtt_msg_listener.my_object import MqttMessage
 from mqtt_msg_listener.my_dao import SensorDataDAO
+from mqtt_msg_listener.helper_functions import get_timestamp
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(module)s - %(threadName)s - %(levelname)s - %(message)s')
@@ -21,7 +22,7 @@ def on_message_callback(client, userdata, msg):
     assert isinstance(msg, mqtt.MQTTMessage)
     logging.debug("GET %s - %s - %s - %s" % (msg.mid, msg.topic, msg.qos, msg.payload.decode("utf-8")))
     mqttReceiveQueue.put(MqttMessage(mid=msg.mid, topic=msg.topic,
-                                     qos=msg.qos, payload=msg.payload.decode("utf-8")))
+                                     qos=msg.qos, payload=msg.payload.decode("utf-8"), ts=get_timestamp()))
 
 
 logging.info("Hello")

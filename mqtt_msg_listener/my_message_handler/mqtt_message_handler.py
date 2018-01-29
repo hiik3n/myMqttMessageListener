@@ -16,7 +16,6 @@ class MqttMessageHandler(object):
         self.logger.debug("Process message %s" % repr(message))
 
         _topic = self._parse_topic(message.topic)
-        _payload = self._parse_payload(message.payload)
 
         _type = _topic[0]
 
@@ -28,7 +27,7 @@ class MqttMessageHandler(object):
             if _msgConnector is None:
                 self.logger.warning("Can not find Connector for message %s" % repr(message))
                 return None
-            return SensorMessageHandler().process(_msgConnector, _topic, _payload)
+            return SensorMessageHandler().process(_msgConnector, _topic, message)
         else:
             self.logger.warning("Can not find proper handler for message %s" % repr(message))
             return None

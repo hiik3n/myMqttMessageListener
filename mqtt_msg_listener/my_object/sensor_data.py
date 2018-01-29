@@ -6,6 +6,7 @@ class SensorData(object):
 
         # record info
         self.id = kwargs['id'] if 'id' in kwargs.keys() else None
+        self.ts = kwargs['ts'] if 'ts' in kwargs.keys() else None
 
         # hub info
         self.hubId = kwargs['hub_id'] if 'hub_id' in kwargs.keys() else None
