@@ -73,6 +73,7 @@ class SensorDataDAO(DAOInterface):
                 'hub_id': data.hubId,
                 'knot_id': data.knotId,
                 'sen_id': data.senId,
+                'sen_typ': data.senTyp
             },
             'fields': {
                 'hub_ts': data.hubTs,

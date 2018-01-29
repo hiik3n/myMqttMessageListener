@@ -22,3 +22,4 @@ class SensorData(object):
         self.senId = kwargs['sen_id'] if 'sen_id' in kwargs.keys() else None
         self.senTs = kwargs['sen_ts'] if 'sen_ts' in kwargs.keys() else None
         self.senVal = kwargs['sen_val'] if 'sen_val' in kwargs.keys() else None
+        self.senTyp = kwargs['sen_typ'] if 'sen_typ' in kwargs.keys() else None

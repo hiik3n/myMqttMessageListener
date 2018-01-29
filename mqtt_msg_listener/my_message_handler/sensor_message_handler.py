@@ -25,21 +25,24 @@ class SensorMessageHandler(object):
                                        hub_ts=_payload['ts'],
                                        knot_id=topic_list[2],
                                        sen_id=topic_list[3],
+                                       sen_typ='temperature',
                                        sen_val=float(_payload['temperature']),
                                        ts=message.ts)
             return message_connector.insert(_sensorData01)
-        elif topic_list[3] == 'sht':
+        elif topic_list[3].lower() == 'sht':
             _payload = decode_json(message.payload)
             _sensorData01 = SensorData(hub_id=topic_list[1],
-                                       hub_ts=_payload['ts'],
+                                       hub_ts=float(_payload['ts']),
                                        knot_id=topic_list[2],
                                        sen_id=topic_list[3],
+                                       sen_typ='temperature',
                                        sen_val=float(_payload['temperature']),
                                        ts=message.ts)
             _sensorData02 = SensorData(hub_id=topic_list[1],
-                                       hub_ts=_payload['ts'],
+                                       hub_ts=float(_payload['ts']),
                                        knot_id=topic_list[2],
                                        sen_id=topic_list[3],
+                                       sen_typ='humidity',
                                        sen_val=float(_payload['humidity']),
                                        ts=message.ts)
             return message_connector.insert([_sensorData01, _sensorData02])
