@@ -46,7 +46,26 @@ class SensorMessageHandler(object):
                                        sen_val=float(_payload['humidity']),
                                        ts=message.ts)
             return message_connector.insert([_sensorData01, _sensorData02])
-            pass
+        elif topic_list[3].lower() == 'pir':
+            _payload = decode_json(message.payload)
+            _sensorData01 = SensorData(hub_id=topic_list[1],
+                                       hub_ts=float(_payload['ts']),
+                                       knot_id=topic_list[2],
+                                       sen_id=topic_list[3],
+                                       sen_typ='pir',
+                                       sen_val=float(_payload['pir']),
+                                       ts=message.ts)
+            return message_connector.insert(_sensorData01)
+        elif topic_list[3].lower() == 'contact':
+            _payload = decode_json(message.payload)
+            _sensorData01 = SensorData(hub_id=topic_list[1],
+                                       hub_ts=float(_payload['ts']),
+                                       knot_id=topic_list[2],
+                                       sen_id=topic_list[3],
+                                       sen_typ='contact',
+                                       sen_val=float(_payload['contact']),
+                                       ts=message.ts)
+            return message_connector.insert(_sensorData01)
         else:
             self.logger.warning("Can not find any action for sensor message %s" % message)
             return None
