@@ -53,13 +53,13 @@ logging.debug("Connected to Database (code=%s)" % res)
 time.sleep(5)
 
 while 1:
-    logging.debug("Hi")
-
-    logging.debug("Check the connection to Mqtt Broker (%s), Database (%s)" %
-                  (mqttConn.is_connect(), sensorDao.is_connect()))
+    # logging.debug("Hi")
+    #
+    # logging.debug("Check the connection to Mqtt Broker (%s), Database (%s)" %
+    #               (mqttConn.is_connect(), sensorDao.is_connect()))
 
     while not mqttReceiveQueue.is_empty():
         mqttMsgHandler.process(mqttReceiveQueue.get())
 
-    time.sleep(30)
+    time.sleep(0.5)
 
