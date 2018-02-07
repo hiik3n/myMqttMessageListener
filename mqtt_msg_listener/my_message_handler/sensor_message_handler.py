@@ -66,6 +66,23 @@ class SensorMessageHandler(object):
                                        sen_val=float(_payload['contact']),
                                        ts=message.ts)
             return message_connector.insert(_sensorData01)
+        elif topic_list[3].lower() == 'ntc10':
+            _payload = decode_json(message.payload)
+            _sensorData01 = SensorData(hub_id=topic_list[1],
+                                       hub_ts=float(_payload['ts']),
+                                       knot_id=topic_list[2],
+                                       sen_id=topic_list[3],
+                                       sen_typ='temperature',
+                                       sen_val=float(_payload['temperature']),
+                                       ts=message.ts)
+            _sensorData02 = SensorData(hub_id=topic_list[1],
+                                       hub_ts=float(_payload['ts']),
+                                       knot_id=topic_list[2],
+                                       sen_id=topic_list[3],
+                                       sen_typ='battery_level',
+                                       sen_val=float(_payload['battery_level']),
+                                       ts=message.ts)
+            return message_connector.insert([_sensorData01, _sensorData02])
         else:
             self.logger.warning("Can not find any action for sensor message %s" % message)
             return None
@@ -89,6 +106,11 @@ if __name__ == "__main__":
     topicList = ['sensor', 'testhub', 'testknot', 'sht']
     shtPayload = encode_json({'ts': 123456, 'temperature': 99, 'humidity': 99})
     shtMsg = MqttMessage(ts=123456, topic='/sensor/testhub/testknot/sht', payload=shtPayload)
+    SensorMessageHandler().process(DAOInterface(), topicList, shtMsg)
+
+    topicList = ['sensor', 'testhub', 'testknot', 'ntc10']
+    shtPayload = encode_json({'ts': 123456, 'temperature': 99, 'battery_level': 3})
+    shtMsg = MqttMessage(ts=123456, topic='/sensor/testhub/testknot/ntc10', payload=shtPayload)
     SensorMessageHandler().process(DAOInterface(), topicList, shtMsg)
 
 
