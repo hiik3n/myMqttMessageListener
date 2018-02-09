@@ -97,6 +97,44 @@ class SensorMessageHandler(object):
                                        sen_val=float(_payload['rssi']) if 'rssi' in _payload.keys() else None,
                                        ts=message.ts)
             return message_connector.insert([_sensorData01, _sensorData02, _sensorData03])
+        elif topic_list[3].lower() == 'ntcldrdorble':
+            _payload = decode_json(message.payload)
+            _sensorData01 = SensorData(hub_id=topic_list[1],
+                                       hub_ts=float(_payload['ts']),
+                                       knot_id=topic_list[2],
+                                       sen_id=topic_list[3],
+                                       sen_typ='temperature',
+                                       sen_val=float(_payload['temperature']),
+                                       ts=message.ts)
+            _sensorData02 = SensorData(hub_id=topic_list[1],
+                                       hub_ts=float(_payload['ts']),
+                                       knot_id=topic_list[2],
+                                       sen_id=topic_list[3],
+                                       sen_typ='battery_level',
+                                       sen_val=float(_payload['battery_level']),
+                                       ts=message.ts)
+            _sensorData03 = SensorData(hub_id=topic_list[1],
+                                       hub_ts=float(_payload['ts']),
+                                       knot_id=topic_list[2],
+                                       sen_id=topic_list[3],
+                                       sen_typ='rssi',
+                                       sen_val=float(_payload['rssi']) if 'rssi' in _payload.keys() else None,
+                                       ts=message.ts)
+            _sensorData04 = SensorData(hub_id=topic_list[1],
+                                       hub_ts=float(_payload['ts']),
+                                       knot_id=topic_list[2],
+                                       sen_id=topic_list[3],
+                                       sen_typ='door',
+                                       sen_val=float(_payload['door']),
+                                       ts=message.ts)
+            _sensorData05 = SensorData(hub_id=topic_list[1],
+                                       hub_ts=float(_payload['ts']),
+                                       knot_id=topic_list[2],
+                                       sen_id=topic_list[3],
+                                       sen_typ='light',
+                                       sen_val=float(_payload['light']),
+                                       ts=message.ts)
+            return message_connector.insert([_sensorData01, _sensorData02, _sensorData03, _sensorData04, _sensorData05])
         else:
             self.logger.warning("Can not find any action for sensor message %s" % message)
             return None
@@ -125,6 +163,11 @@ if __name__ == "__main__":
     topicList = ['sensor', 'testhub', 'testknot', 'ntc10']
     shtPayload = encode_json({'ts': 123456, 'temperature': 99, 'battery_level': 3, 'rssi' : -53})
     shtMsg = MqttMessage(ts=123456, topic='/sensor/testhub/testknot/ntc10', payload=shtPayload)
+    SensorMessageHandler().process(DAOInterface(), topicList, shtMsg)
+
+    topicList = ['sensor', 'testhub', 'testknot', 'ntcldrdorble']
+    shtPayload = encode_json({"rssi": -53, "battery_level": 3.19, "door": 0, "light": 62, "temperature": 24.6, "ts": 123456789})
+    shtMsg = MqttMessage(ts=123456, topic='/sensor/testhub/testknot/ntcldrdorble', payload=shtPayload)
     SensorMessageHandler().process(DAOInterface(), topicList, shtMsg)
 
 
